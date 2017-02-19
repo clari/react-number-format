@@ -130,8 +130,9 @@ class NumberFormat extends React.Component {
 
     //change val to string if its number
     if(typeof val === 'number') val = val + '';
+    const sign = val && val[0] === '-' ? '-' : '';
 
-    if(!val || !(val.match(numRegex))) return {value :'', formattedValue: (maskPattern ? '' : '')}
+    if(!val || !(val.match(numRegex))) return {value :sign, formattedValue: sign}
     const num = val.match(numRegex).join('');
 
     let formattedValue = num;
@@ -169,8 +170,8 @@ class NumberFormat extends React.Component {
     }
 
     return {
-        value : formattedValue.match(numRegex).join(''),
-        formattedValue : formattedValue
+        value : sign + formattedValue.match(numRegex).join(''),
+        formattedValue : sign + formattedValue
     }
   }
 
@@ -218,6 +219,9 @@ class NumberFormat extends React.Component {
     const {key} = e;
     const numRegex = this.getNumberRegex(false, decimalPrecision !== false);
     //Handle backspace and delete against non numerical/decimal characters
+    if (value.length && value[0] === '-' && selectionStart === 1) {
+      return;
+    }
     if(selectionEnd - selectionStart === 0) {
       if (key === 'Delete' && !numRegex.test(value[selectionStart])) {
         e.preventDefault();

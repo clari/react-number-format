@@ -1,5 +1,5 @@
 /*!
- * react-number-format - 1.1.1
+ * react-number-format-clari - 1.1.2-alpha.3
  * Author : Sudhanshu Yadav
  * Copyright (c) 2016,2017 to Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
  */
@@ -238,8 +238,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      //change val to string if its number
 	      if (typeof val === 'number') val = val + '';
+	      var sign = val && val[0] === '-' ? '-' : '';
 
-	      if (!val || !val.match(numRegex)) return { value: '', formattedValue: maskPattern ? '' : '' };
+	      if (!val || !val.match(numRegex)) return { value: sign, formattedValue: sign };
 	      var num = val.match(numRegex).join('');
 
 	      var formattedValue = num;
@@ -276,8 +277,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      return {
-	        value: formattedValue.match(numRegex).join(''),
-	        formattedValue: formattedValue
+	        value: sign + formattedValue.match(numRegex).join(''),
+	        formattedValue: sign + formattedValue
 	      };
 	    }
 	  }, {
@@ -342,6 +343,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var numRegex = this.getNumberRegex(false, decimalPrecision !== false);
 	      //Handle backspace and delete against non numerical/decimal characters
+	      if (value.length && value[0] === '-' && selectionStart === 1) {
+	        return;
+	      }
 	      if (selectionEnd - selectionStart === 0) {
 	        if (key === 'Delete' && !numRegex.test(value[selectionStart])) {
 	          e.preventDefault();
